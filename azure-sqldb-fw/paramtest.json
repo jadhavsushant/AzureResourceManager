@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "firewallIpAddresses": {
+        "value": [
+          {
+            "RuleName": "SQLRules51",
+            "StartIP": "20.30.11.50",
+            "EndIP": "20.30.11.51"
+          },
+          {
+            "RuleName": "SQLRules52",
+            "StartIP": "20.30.11.52",
+            "EndIP": "20.30.11.52"
+          },
+          {
+            "RuleName": "SQLRUles53",
+            "StartIP": "20.30.11.53",
+            "EndIP": "20.30.11.53"
+          },
+          {
+            "RuleName": "SQLRUles54",
+            "StartIP": "20.30.11.54",
+            "EndIP": "20.30.11.55"
+          }
+        ]
+      },
+      "sqlServerName": {
+        "value": "mysqlserverapril012022"
+      }
+    }
+  }

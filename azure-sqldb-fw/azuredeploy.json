@@ -1,0 +1,41 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "firewallIpAddresses":{
+            "type": "array",
+            "defaultValue": [{
+                "RuleName2": "SQLRUles", "StartIP": "20.30.11.40", "EndIP": "20.30.11.40"
+            },{
+                "RuleName3": "SQLRUles", "StartIP": "20.30.11.41", "EndIP": "20.30.11.42"
+            }
+            ]
+        },
+        "sqlServerName": {
+            "type": "string",
+            "defaultValue": "mysqlserverapril012022",
+            "metadata": {
+                "description": "description"
+            }
+        }
+    },
+    "variables": {
+        "sqlServerName": "mysqlserverapril012022"
+    },
+    "resources": [
+        {
+            "name": "[concat(parameters('sqlServerName'), '/', parameters('firewallIpAddresses')[copyIndex('firewallrulecopy')].RuleName)]",
+            "type": "Microsoft.Sql/servers/firewallrules",
+            "apiVersion": "2014-04-01",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "startIpAddress": "[parameters('firewallIpAddresses')[copyIndex('firewallrulecopy')].StartIP]",
+                "endIpAddress": "[parameters('firewallIpAddresses')[copyIndex('firewallrulecopy')].EndIP]"
+            },
+            "copy": {
+                "name": "firewallrulecopy",
+                "count": "[length(parameters('firewallIpAddresses'))]"
+            }
+        }
+    ]
+}
