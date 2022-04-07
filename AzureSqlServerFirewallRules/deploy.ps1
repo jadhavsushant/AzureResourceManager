@@ -1,8 +1,9 @@
-$parameters1 = Get-Content "C:\script\arm\SQL-FirewallRule\parameters.json" | ConvertFrom-json
+$parameters1 = Get-Content "D:\AzureResourceManager\AzureResourceManager\AzureSqlServerFirewallRules\parameters.json" | ConvertFrom-json
 
-$TemplateFile = "C:\script\arm\SQL-FirewallRule\armtemplate.json"
+$TemplateFile = "D:\AzureResourceManager\AzureResourceManager\AzureSqlServerFirewallRules\armtemplate.json"
 
 $dbname = $parameters1.WorkLoads[0].DbName
+$DbType = $parameters1.WorkLoads[0].DbType
 $firewallIps = @()
 $firewallRule = $parameters1.WorkLoads[0].firewallRuleName | ForEach-Object {
     @{'name' = [string]$_.FirewallRuleName; 'startIpAddress' = [string]$_.startIpAddress; 'endIpAddress' = [string]$_.endIpAddress }
@@ -10,6 +11,7 @@ $firewallRule = $parameters1.WorkLoads[0].firewallRuleName | ForEach-Object {
 $firewallIps += $firewallRule
 $deployments = @{}
 $deployments.Add('DbName', $dbname)
+$deployments.Add('DbType', $DbType)
 $deployments.Add('firewallRuleName', $firewallIps)
 
 $armDeploymentsets = $deployments

@@ -4,7 +4,15 @@
     "parameters": {
         "DbName": {
             "type": "string",
-            "defaultValue": "azressqldbsrv"
+            "defaultValue": "azmysqlsrv0604"
+        },
+        "DbType": {
+            "type": "string",
+            "allowedValues": [
+                "SQL",
+                "MYSQL",
+                "Cosmos"
+            ]
         },
         "firewallRuleName": {
             "type": "array",
@@ -33,9 +41,10 @@
 
     },
     "resources": [
-        {   
+        {
+            "condition": "[equals(parameters('DbType'),'SQL')]",
             "type": "Microsoft.Sql/servers/firewallrules",
-             "name": "[concat(variables('databaseName'), '/',parameters('firewallRuleName')[copyIndex('firewall_rulename')].name)]",
+            "name": "[concat(variables('databaseName'), '/',parameters('firewallRuleName')[copyIndex('firewall_rulename')].name)]",
             "apiVersion": "2021-08-01-preview",
             "location": "[variables('location')]",
             "properties": {
@@ -46,6 +55,22 @@
                 "name": "firewall_rulename",
                 "count": "[length(parameters('firewallRuleName'))]"
             }
+        },
+        {
+            "condition": "[equals(parameters('DbType'),'MYSQL')]",
+            "type": "Microsoft.DBforMySQL/servers/firewallRules",
+            "name": "[concat(variables('databaseName'), '/',parameters('firewallRuleName')[copyIndex('firewall_rulename')].name)]",
+            "apiVersion": "2017-12-01",
+            "location": "[variables('location')]",
+            "properties": {
+                "startIpAddress": "[parameters('firewallRuleName')[copyIndex('firewall_rulename')].startIpAddress]",
+                "endIpAddress": "[parameters('firewallRuleName')[copyIndex('firewall_rulename')].endIpAddress]"
+            },
+            "copy": {
+                "name": "firewall_rulename",
+                "count": "[length(parameters('firewallRuleName'))]"
+            }
         }
+
     ]
 }
