@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "DbName": {
+            "type": "string",
+            "defaultValue": "azressqldbsrv"
+        },
+        "firewallRuleName": {
+            "type": "array",
+            "defaultValue": [
+                {
+                    "FirewallRuleName": "IPRange1",
+                    "startIpAddress": "192.168.1.0",
+                    "endIpAddress": "192.168.1.10"
+                },
+                {
+                    "FirewallRuleName": "IPRange2",
+                    "startIpAddress": "192.168.1.10",
+                    "endIpAddress": "192.168.1.11"
+                },
+                {
+                    "FirewallRuleName": "IPRange3",
+                    "startIpAddress": "192.168.1.12",
+                    "endIpAddress": "192.168.1.12"
+                }
+            ]
+        }
+    },
+    "variables": {
+        "location": "eastus",
+        "databaseName": "[toLower(parameters('DbName'))]"
+
+    },
+    "resources": [
+        {   
+            "type": "Microsoft.Sql/servers/firewallrules",
+             "name": "[concat(variables('databaseName'), '/',parameters('firewallRuleName')[copyIndex('firewall_rulename')].name)]",
+            "apiVersion": "2021-08-01-preview",
+            "location": "[variables('location')]",
+            "properties": {
+                "startIpAddress": "[parameters('firewallRuleName')[copyIndex('firewall_rulename')].startIpAddress]",
+                "endIpAddress": "[parameters('firewallRuleName')[copyIndex('firewall_rulename')].endIpAddress]"
+            },
+            "copy": {
+                "name": "firewall_rulename",
+                "count": "[length(parameters('firewallRuleName'))]"
+            }
+        }
+    ]
+}

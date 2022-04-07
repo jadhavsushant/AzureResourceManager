@@ -1,0 +1,14 @@
+{
+    "$schema": "http://json-schema.org/schema#",
+    "contentVersion": "1.0.0.0",
+    "WorkLoads": [{
+        "resourceGroupName": "azresourcegroup",
+        "DbType": "SQL",
+        "DbName": "azressqldbsrv",
+        "firewallRuleName": [{
+            "FirewallRuleName": "sushant2",
+            "startIpAddress": "192.168.1.200",
+            "endIpAddress": "192.168.1.202"
+        }]
+    }]
+}
